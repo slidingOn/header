@@ -39,6 +39,7 @@ export default class Header {
    *   readOnly - read only mode flag
    */
   constructor({ data, config, api, readOnly }) {
+    console.log(config)
     this.api = api;
     this.readOnly = readOnly;
 
@@ -129,6 +130,8 @@ export default class Header {
    * @param {number} level - level to set
    */
   setLevel(level) {
+    this._settings._value.defaultLevel=level
+    this._settings._value.level=level
     this.data = {
       level: level,
       text: this.data.text,
@@ -299,7 +302,7 @@ export default class Header {
     /**
      * Add Placeholder
      */
-    tag.dataset.placeholder = this.api.i18n.t(this._settings.placeholder || '');
+    tag.dataset.placeholder = this.api.i18n.t(this._settings._value.placeholder || '');
 
     return tag;
   }
@@ -328,9 +331,9 @@ export default class Header {
     /**
      * User can specify own default level value
      */
-    if (this._settings.defaultLevel) {
+    if (this._settings._value.defaultLevel) {
       const userSpecified = this.levels.find(levelItem => {
-        return levelItem.number === this._settings.defaultLevel;
+        return levelItem.number === this._settings._value.defaultLevel;
       });
 
       if (userSpecified) {
@@ -394,8 +397,8 @@ export default class Header {
       },
     ];
 
-    return this._settings.levels ? availableLevels.filter(
-      l => this._settings.levels.includes(l.number)
+    return this._settings._value.levels ? availableLevels.filter(
+      l => this._settings._value.levels.includes(l.number)
     ) : availableLevels;
   }
 
@@ -435,9 +438,9 @@ export default class Header {
         break;
     }
 
-    if (this._settings.levels) {
+    if (this._settings._value.levels) {
       // Fallback to nearest level when specified not available
-      level = this._settings.levels.reduce((prevLevel, currLevel) => {
+      level = this._settings._value.levels.reduce((prevLevel, currLevel) => {
         return Math.abs(currLevel - level) < Math.abs(prevLevel - level) ? currLevel : prevLevel;
       });
     }
